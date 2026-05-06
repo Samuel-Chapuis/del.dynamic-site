@@ -13,6 +13,32 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(balanceColumns, 100);
   window.addEventListener('resize', debounce(balanceColumns, 120));
   window.addEventListener('load', balanceColumns);
+
+  // Ajouter les événements de copie
+  document.querySelectorAll('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const textToCopy = btn.dataset.copy;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.classList.remove('copied');
+        }, 2000);
+      }).catch(() => {
+        // Fallback pour les anciens navigateurs
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+  });
 });
 
 function balanceColumns() {
@@ -54,7 +80,9 @@ function debounce(fn, wait) {
 
 function downloadPDF() {
   const btn = document.querySelector('.btn-download');
-  btn.textContent = 'Génération…';
+  const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
+  const generatingText = lang === 'en' ? 'Generating…' : 'Génération…';
+  btn.textContent = generatingText;
   btn.disabled = true;
 
   const element = document.getElementById('cv-content');
@@ -77,7 +105,12 @@ function downloadPDF() {
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
       </svg>
-      Télécharger PDF`;
+      <span data-i18n="downloadPdf">Télécharger PDF</span>`;
     btn.disabled = false;
+
+    // Si le script i18n est chargé, il mettra à jour le texte.
+    if (typeof applyLanguageCv === 'function') {
+      applyLanguageCv(lang);
+    }
   });
 }

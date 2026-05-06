@@ -93,6 +93,26 @@ header {
   box-shadow: 0 4px 20px rgba(59,130,246,0.35);
 }
 
+.lang-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: rgba(248,250,252,0.04);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+.lang-toggle:hover {
+  border-color: rgba(248,250,252,0.24);
+  background: rgba(248,250,252,0.08);
+}
+
 /* ── Hero banner ── */
 .hero {
   padding: 72px 0 56px;
@@ -144,6 +164,15 @@ header {
 }
 .pill:hover { border-color: rgba(248,250,252,0.24); color: var(--text); }
 .pill svg { flex-shrink: 0; }
+
+.copy-btn {
+  font: inherit; cursor: pointer;
+}
+.copy-btn.copied {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #86efac;
+}
 
 /* ── Main layout ── */
 .cv-layout {

@@ -162,6 +162,12 @@ header {
   transition: 0.25s ease;
 }
 
+.flag-icon {
+  display: block;
+  width: 20px;
+  height: 14px;
+}
+
 .nav-cta:hover,
 .lang-toggle:hover,
 .button:hover {

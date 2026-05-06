@@ -22,17 +22,20 @@
       <span>del·dynamic</span>
     </a>
     <div class="nav-links">
-      <a href="#experience">Expérience</a>
-      <a href="#formation">Formation</a>
-      <a href="#projets">Projets</a>
-      <a href="#competences">Compétences</a>
+      <a href="#experience" data-i18n="nav.experience">Expérience</a>
+      <a href="#formation" data-i18n="nav.formation">Formation</a>
+      <a href="#projets" data-i18n="nav.projects">Projets</a>
+      <a href="#competences" data-i18n="nav.skills">Compétences</a>
     </div>
-    <button class="btn-download" onclick="downloadPDF()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
-      Télécharger PDF
-    </button>
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <button class="btn-download" onclick="downloadPDF()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span data-i18n="downloadPdf">Télécharger PDF</span>
+      </button>
+      <button class="lang-toggle" id="langToggleCv" type="button" aria-label="Changer de langue">FR</button>
+    </div>
   </nav>
 </header>
 
@@ -44,24 +47,24 @@
     Aerospace &amp; Big Data Engineer
   </div> -->
   <h1 class="hero-name">Samuel<br>Chapuis</h1>
-  <p class="hero-title">Ingénieur Aérospatial · MSc Big Data · Fondateur</p>
-  <p class="hero-desc">Passionné par l'ingénierie aérospatiale, l'analyse de données et le développement de systèmes autonomes. Actuellement en MSc Applied Mathematics à CentraleSupélec.</p>
+  <p class="hero-title" data-i18n="hero.title">Ingénieur Aérospatial · Big Data</p>
+  <p class="hero-desc" data-i18n="hero.desc">Ingénieur aérospatial et diplomé de Mathematique appliquées. Spécialisé en Big Data, Mécanique des fluides et Systèmes autonomes.</p>
   <div class="contact-pills">
-    <a href="tel:+33728552998" class="pill">
+    <button type="button" class="pill copy-btn" data-copy="+33728552998" title="Cliquer pour copier">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13 19.79 19.79 0 0 1 1.58 4.27 2 2 0 0 1 3.55 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.29 6.29l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
       +33 7 28 55 29 98
-    </a>
-    <a href="mailto:samuel.chapuis@del-dynamic.fr" class="pill">
+    </button>
+    <button type="button" class="pill copy-btn" data-copy="samuel.chapuis@del-dynamic.fr" title="Cliquer pour copier">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
       samuel.chapuis@del-dynamic.fr
-    </a>
+    </button>
     <a href="https://github.com/Samuel-Chapuis" target="_blank" class="pill">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
       Samuel-Chapuis
     </a>
     <span class="pill">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-      IDF, France
+      <span data-i18n="hero.location">IDF, France</span>
     </span>
   </div>
 </section>
@@ -74,7 +77,7 @@
 
     <!-- Formation -->
     <div class="card reveal" id="formation">
-      <p class="card-title">Formation</p>
+      <p class="card-title" data-i18n="formation">Formation</p>
 
       <div class="edu-entry">
         <p class="edu-school">CentraleSupélec – Paris-Saclay</p>
@@ -100,25 +103,25 @@
 
     <!-- Langues -->
     <div class="card reveal" id="competences">
-      <p class="card-title">Langues</p>
+      <p class="card-title" data-i18n="langues">Langues</p>
 
       <div class="lang-item">
-        <div class="lang-label"><span>Français</span><span class="lang-level">Natif</span></div>
+        <div class="lang-label"><span data-i18n="lang.french">Français</span><span class="lang-level" data-i18n="native">Natif</span></div>
         <div class="lang-bar"><div class="lang-fill" style="width:100%"></div></div>
       </div>
       <div class="lang-item">
-        <div class="lang-label"><span>Anglais</span><span class="lang-level">Courant</span></div>
+        <div class="lang-label"><span data-i18n="lang.english">Anglais</span><span class="lang-level" data-i18n="fluent">Courant</span></div>
         <div class="lang-bar"><div class="lang-fill" style="width:88%"></div></div>
       </div>
       <div class="lang-item">
-        <div class="lang-label"><span>Espagnol</span><span class="lang-level">B1/2</span></div>
+        <div class="lang-label"><span data-i18n="lang.spanish">Espagnol</span><span class="lang-level" data-i18n="lang.spanish.level">B1/2</span></div>
         <div class="lang-bar"><div class="lang-fill" style="width:60%"></div></div>
       </div>
     </div>
 
     <!-- Compétences techniques -->
     <div class="card reveal">
-      <p class="card-title">Programmation</p>
+      <p class="card-title" data-i18n="programmation">Programmation</p>
       <div class="tags">
         <span class="tag accent">Java</span>
         <span class="tag accent">Python</span>
@@ -131,7 +134,7 @@
     </div>
 
     <div class="card reveal">
-      <p class="card-title">CAO & Simulation</p>
+      <p class="card-title" data-i18n="caoSimulation">CAO & Simulation</p>
       <div class="tags">
         <span class="tag">SolidWorks</span>
         <span class="tag">CATIA</span>
@@ -143,7 +146,7 @@
     </div>
 
     <div class="card reveal">
-      <p class="card-title">Mécatronique</p>
+      <p class="card-title" data-i18n="mecatronique">Mécatronique</p>
       <div class="tags">
         <span class="tag">Raspberry Pi</span>
         <span class="tag">Arduino</span>
@@ -159,56 +162,56 @@
 
     <!-- Expériences professionnelles -->
     <div class="card reveal" id="experience">
-      <p class="card-title">Expériences professionnelles</p>
+      <p class="card-title" data-i18n="experience">Expériences professionnelles</p>
 
       <div class="exp-entry">
         <div class="exp-header">
           <div>
-            <p class="exp-role">Founder &amp; Service Engineer</p>
-            <p class="exp-company">del.dynamic — Paris, FR</p>
+            <p class="exp-role" data-i18n="exp.founder.role">Founder &amp; Service Engineer</p>
+            <p class="exp-company" data-i18n="exp.founder.company">del.dynamic — Paris, FR</p>
           </div>
-          <span class="exp-date">depuis 2024</span>
+          <span class="exp-date" data-i18n="exp.founder.date">depuis 2024</span>
         </div>
-        <p class="exp-desc">Création de ma propre société de services en ingénierie, offrant des prestations de conception pour des partenaires industriels.</p>
+        <p class="exp-desc" data-i18n="exp.founder.desc">Création de ma propre société de services en ingénierie, offrant des prestations de conception pour des partenaires industriels.</p>
       </div>
 
       <div class="exp-entry">
         <div class="exp-header">
           <div>
-            <p class="exp-role">Research Internship</p>
-            <p class="exp-company">CEA — Bruyères, FR</p>
+            <p class="exp-role" data-i18n="exp.cea.role">Research Internship</p>
+            <p class="exp-company" data-i18n="exp.cea.company">CEA — Bruyères, FR</p>
           </div>
           <span class="exp-date">2026</span>
         </div>
-        <p class="exp-desc">Modélisation par approche de diffusion des instabilités de Rayleigh–Taylor dans des écoulements turbulents biphasiques à l'aide d'ondelettes.</p>
+        <p class="exp-desc" data-i18n="exp.cea.desc">Modélisation par approche de diffusion des instabilités de Rayleigh–Taylor dans des écoulements turbulents biphasiques à l'aide d'ondelettes.</p>
       </div>
 
       <div class="exp-entry">
         <div class="exp-header">
           <div>
-            <p class="exp-role">Research Engineer Intern</p>
-            <p class="exp-company">IrisLab — Saclay, FR</p>
+            <p class="exp-role" data-i18n="exp.irislab.role">Research Engineer Intern</p>
+            <p class="exp-company" data-i18n="exp.irislab.company">IrisLab — Saclay, FR</p>
           </div>
           <span class="exp-date">2024 – 2025</span>
         </div>
-        <p class="exp-desc">Développement d'une plateforme d'émission laser autonome et d'un récepteur photovoltaïque pour la recharge en vol de drones.</p>
+        <p class="exp-desc" data-i18n="exp.irislab.desc">Développement d'une plateforme d'émission laser autonome et d'un récepteur photovoltaïque pour la recharge en vol de drones.</p>
       </div>
 
       <div class="exp-entry">
         <div class="exp-header">
           <div>
-            <p class="exp-role">Internship – Data Analyst</p>
-            <p class="exp-company">Réunion Aérienne et Spatiale — Paris, FR</p>
+            <p class="exp-role" data-i18n="exp.ras.role">Internship – Data Analyst</p>
+            <p class="exp-company" data-i18n="exp.ras.company">Réunion Aérienne et Spatiale — Paris, FR</p>
           </div>
           <span class="exp-date">2023</span>
         </div>
-        <p class="exp-desc">Analyse de données sur des missions spatiales pour évaluer leur assurabilité.</p>
+        <p class="exp-desc" data-i18n="exp.ras.desc">Analyse de données sur des missions spatiales pour évaluer leur assurabilité.</p>
       </div>
     </div>
 
     <!-- Projets -->
     <div class="card reveal" id="projets">
-      <p class="card-title">Projets associatifs &amp; techniques</p>
+      <p class="card-title" data-i18n="projets">Projets associatifs &amp; techniques</p>
 
       <div class="proj-entry">
         <div class="proj-header">
@@ -218,7 +221,7 @@
           </div>
           <span class="proj-year">2024 – 2025</span>
         </div>
-        <p class="proj-desc">Développement d'une nouvelle plateforme de vol autonome.</p>
+        <p class="proj-desc" data-i18n="proj.uav_2024.desc">Développement d'une nouvelle plateforme de vol autonome.</p>
       </div>
 
       <div class="proj-entry">
@@ -229,7 +232,7 @@
           </div>
           <span class="proj-year">2024 – 2025</span>
         </div>
-        <p class="proj-desc">Conception d'un ballon sonde haute altitude pour l'observation de la haute atmosphère.</p>
+        <p class="proj-desc" data-i18n="proj.balloon.desc">Conception d'un ballon sonde haute altitude pour l'observation de la haute atmosphère.</p>
       </div>
 
       <div class="proj-entry">
@@ -240,7 +243,7 @@
           </div>
           <span class="proj-year">2023 – 2024</span>
         </div>
-        <p class="proj-desc">Création d'une aile autonome capable de décollage vertical et déploiement de mini-drones.</p>
+        <p class="proj-desc" data-i18n="proj.uav_2023.desc">Création d'une aile autonome capable de décollage vertical et déploiement de mini-drones.</p>
       </div>
 
       <div class="proj-entry">
@@ -251,7 +254,7 @@
           </div>
           <span class="proj-year">2023</span>
         </div>
-        <p class="proj-desc">Conception et réalisation de véhicules autonomes en compétition.</p>
+        <p class="proj-desc" data-i18n="proj.droneload.desc">Conception et réalisation de véhicules autonomes en compétition.</p>
       </div>
     </div>
 
@@ -262,10 +265,11 @@
 <footer>
   <div class="footer-inner">
     <span>© 2026 Samuel Chapuis</span>
-    <span style="color:rgba(248,250,252,0.3)">Aerospace · Big Data · Founder</span>
+    <span style="color:rgba(248,250,252,0.3)" data-i18n="footer.tagline">Aerospace · Big Data</span>
   </div>
 </footer>
 
+<script src="assets/js/cv-i18n.js" defer></script>
 <script src="assets/js/cv.js" defer></script>
 
 </body>
