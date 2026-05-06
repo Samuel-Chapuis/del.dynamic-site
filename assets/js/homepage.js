@@ -235,9 +235,12 @@ function applyLanguage(lang) {
   });
 
   if (langToggleButton) {
-    const nextLang = activeLang === 'en' ? 'fr' : 'en';
-    langToggleButton.textContent = nextLang.toUpperCase();
+    // Show flag of the active language
+    const flagSrc = activeLang === 'fr' ? 'img/Flag_France.png' : 'img/Flag_United_Kingdom.png';
+    const alt = activeLang === 'fr' ? 'FR' : 'EN';
+    langToggleButton.innerHTML = `<img src="${flagSrc}" alt="${alt}" class="flag-icon" />`;
     langToggleButton.setAttribute('aria-label', activeLang === 'en' ? 'Switch to French' : 'Basculer en anglais');
+    langToggleButton.classList.add('has-flag');
   }
 }
 
@@ -252,3 +255,10 @@ if (langToggleButton) {
     applyLanguage(nextLang);
   });
 }
+
+// Ensure flag sizing for dynamically inserted images (in case script loads before CSS)
+document.addEventListener('DOMContentLoaded', () => {
+  if (langToggleButton) {
+    langToggleButton.classList.add('has-flag');
+  }
+});

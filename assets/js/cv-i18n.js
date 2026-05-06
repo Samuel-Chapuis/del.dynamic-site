@@ -120,9 +120,12 @@ function applyLanguageCv(lang) {
   });
   
   if (langToggle) {
-    const nextLang = lang === 'en' ? 'fr' : 'en';
-    langToggle.textContent = nextLang.toUpperCase();
-    langToggle.setAttribute('aria-label', lang === 'en' ? 'Changer en français' : 'Switch to English');
+    // Show flag of the active language
+    const flagSrc = lang === 'fr' ? 'img/Flag_France.png' : 'img/Flag_United_Kingdom.png';
+    const alt = lang === 'fr' ? 'FR' : 'EN';
+    langToggle.innerHTML = `<img src="${flagSrc}" alt="${alt}" class="flag-icon" />`;
+    langToggle.setAttribute('aria-label', lang === 'en' ? 'Switch to French' : 'Basculer en anglais');
+    langToggle.classList.add('has-flag');
   }
 }
 

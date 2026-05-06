@@ -113,6 +113,38 @@ header {
   background: rgba(248,250,252,0.08);
 }
 
+.flag-icon {
+  display: block;
+  width: 20px;
+  height: 14px;
+}
+
+/* Make flag fill the language toggle bubble on the CV page */
+.lang-toggle {
+  --lang-toggle-size: 44px; /* default square size when showing flag */
+}
+
+.lang-toggle.has-flag {
+  /* use a fixed square size for flag-only appearance */
+  width: var(--lang-toggle-size);
+  height: var(--lang-toggle-size);
+  min-width: var(--lang-toggle-size);
+  min-height: var(--lang-toggle-size);
+  padding: 0;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.lang-toggle.has-flag .flag-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 999px;
+}
+
 /* ── Hero banner ── */
 .hero {
   padding: 72px 0 56px;
