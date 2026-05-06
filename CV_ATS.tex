@@ -1,0 +1,90 @@
+\documentclass[11pt,a4paper,sans]{moderncv}
+
+%-------------------- STYLE & COLOR --------------------
+\moderncvstyle{banking}
+\moderncvcolor{blue}
+\nopagenumbers{}
+
+%-------------------- PACKAGES --------------------
+\usepackage[scale=0.9]{geometry}
+\usepackage{fontawesome5}
+\usepackage{enumitem}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{qrcode}
+\usepackage[hidelinks,unicode,breaklinks=true,bookmarksopen=true]{hyperref}
+
+%-------------------- PERSONAL DATA --------------------
+\name{Samuel}{Chapuis}
+\title{Aerospace \& Big Data Engineer}
+% \address{Ile de France}{}
+
+\phone[mobile]{+33~7~28~55~29~98}
+\email{samuel.chapuis@student-cs.fr}
+\social[github]{Samuel-Chapuis}
+\newcommand{\webcv}{https://del-dynamic.fr/cv-samuel-chapuis.html}
+
+%-------------------- DOCUMENT --------------------
+\begin{document}
+\makecvtitle
+
+\begin{center}
+\small
+\href{\webcv}{\webcv}\hspace{1em}\qrcode[height=1.6cm]{\webcv}
+\end{center}
+\vspace{0.4em}
+
+%------------------------------------------------------
+\section{Formation}
+\cventry{2025--2026}{MSc Applied Mathematics – Big Data Management and Analytics }{CentraleSupélec – Paris-Saclay}{Saclay, FR}{}{}
+\cventry{2025}{Exchange Student – CFD Research Program directed by Prof. Cepeda-Rizo}{CSULB -California State University, Long Beach}{Long Beach, USA}{}{}
+\cventry{2021--2026}{French Engineering Degree (MEng equiv.) – Aerospace}{ISAE ESTACA}{SQY, FR}{}{}
+
+%------------------------------------------------------
+\section{Expériences professionnelles}
+\cventry{since 2024}{Founder \& Service Engineer}{del.dynamic}{Paris, FR}{}{
+I created my own company providing engineering design services for industrial partners.
+}
+\cventry{2026}{Research Internship}{CEA}{Buyere, FR}{}{
+Diffusion framework for Rayleigh–Taylor instabilities in two-phase turbulent flows, using wavelet.
+}
+\cventry{2024--2025}{Research Engineer Internship}{IrisLab}{Saclay, FR}{}{
+Development of an autonomous laser emission platform and a photovoltaic receiver for in-flight charging.
+}
+\cventry{2023}{Internship}{Réunion Aérienne et Spatiale}{Paris, FR}{}{
+Data analysis on space missions to evaluate their insurability.
+}
+% \cventry{2022}{Internship}{Société du Grand Paris}{Paris, FR}{}{
+% Data processing in Java and VBA – Site security management.
+% }
+
+%------------------------------------------------------
+\section{Projets associatifs et techniques}
+\cventry{2024--2025}{Dassault Aviation}{Dassault UAV Challenge}{Bordeaux, FR}{}{
+Development of a new autonomous flight platform.
+}
+\cventry{2024--2025}{Planet Science}{Probe Balloon}{Paris, FR}{}{
+Design of a high-altitude sounding balloon for upper-atmosphere observation.
+}
+\cventry{2023--2024}{Dassault Aviation}{Dassault UAV Challenge}{Bordeaux, FR}{}{
+Creation of an autonomous wing capable of vertical take-off and mini-UAV deployment.
+}
+\cventry{2023}{Safran}{Droneload \& UTAC Contests}{Montlhéry, FR}{}{
+Design and realization of autonomous vehicles for competition.
+}
+
+%------------------------------------------------------
+\section{Compétences}
+\cvitem{Languages}{\textbf{French:} Native \quad \textbf{English:} Fluent \quad \textbf{Spanish:} B2}
+\cvitem{Software Programming}{C, C++, Java, Python}
+\cvitem{Web Development}{HTML, CSS, JavaScript}
+\cvitem{CAD \& Simulation}{SolidWorks, CATIA, Fusion 360}
+\cvitem{Mechatronics}{Raspberry~Pi, Arduino, ESP32, Matlab, KiCad}
+\cvitem{CFD \& Thermal}{Matlab, XLRFS, Ansys Fluent, SolidWorks Flow Simulation}
+
+% %------------------------------------------------------
+% \section{Liens}
+% \cvitem{GitHub}{\href{https://github.com/Samuel-Chapuis}{https://github.com/Samuel-Chapuis}}
+
+\end{document}
