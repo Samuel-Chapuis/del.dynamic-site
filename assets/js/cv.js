@@ -44,26 +44,6 @@ function balanceColumns() {
   }
 }
 
-function resetColumnHeights() {
-  const left = document.querySelector('.left-col');
-  const right = document.querySelector('.right-col');
-
-  if (left) left.style.paddingBottom = '';
-  if (right) right.style.paddingBottom = '';
-}
-
-function getBaseLineHeight(element) {
-  const styles = getComputedStyle(element);
-  const fontSize = parseFloat(styles.fontSize) || 16;
-  const lineHeight = parseFloat(styles.lineHeight);
-
-  if (Number.isFinite(lineHeight) && lineHeight > 0) {
-    return lineHeight / fontSize;
-  }
-
-  return 1.6;
-}
-
 function debounce(fn, wait) {
   let timeoutId;
   return (...args) => {
