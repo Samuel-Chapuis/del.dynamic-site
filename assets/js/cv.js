@@ -45,28 +45,36 @@ function balanceColumns() {
   const layout = document.querySelector('.cv-layout');
   if (!layout) return;
 
-  // Sur mobile, ne pas équilibrer
-  if (window.matchMedia('(max-width: 860px)').matches) {
-    resetColumnHeights();
-    return;
-  }
-
   const left = layout.querySelector('.left-col');
   const right = layout.querySelector('.right-col');
   if (!left || !right) return;
 
-  // Réinitialiser les hauteurs avant mesure
   resetColumnHeights();
+
+  if (window.matchMedia('(max-width: 860px)').matches) {
+    return;
+  }
 
   const leftHeight = left.offsetHeight;
   const rightHeight = right.offsetHeight;
-  const maxHeight = Math.max(leftHeight, rightHeight);
 
-  // Ajouter du padding à la colonne la plus courte pour égaliser
   if (leftHeight < rightHeight) {
     left.style.paddingBottom = (rightHeight - leftHeight) + 'px';
   } else if (rightHeight < leftHeight) {
     right.style.paddingBottom = (leftHeight - rightHeight) + 'px';
+  }
+}
+
+function resetColumnHeights() {
+  const left = document.querySelector('.left-col');
+  const right = document.querySelector('.right-col');
+
+  if (left) {
+    left.style.paddingBottom = '';
+  }
+
+  if (right) {
+    right.style.paddingBottom = '';
   }
 }
 
@@ -100,8 +108,9 @@ function collectCvData() {
   });
 
   const githubLink = document.querySelector('.contact-pills a[href*="github"]');
-  const github = githubLink ? githubLink.getAttribute('href') : '';
+  const github = githubLink ? getText(githubLink) : '';
   const location = getText(document.querySelector('.contact-pills [data-i18n="hero.location"]'));
+  const contactLine = [phone, email, github ? `GitHub: ${github}` : '', location].filter(Boolean).join(' · ');
 
   const educationTitle = getText(document.querySelector('#formation .card-title'));
   const education = Array.from(document.querySelectorAll('#formation .edu-entry')).map((entry) => ({
@@ -148,6 +157,7 @@ function collectCvData() {
     email,
     github,
     location,
+    contactLine,
     educationTitle,
     education,
     experienceTitle,
@@ -160,86 +170,206 @@ function collectCvData() {
   };
 }
 
-function renderAtsPdf({ data, webUrl, qrDataUrl, fontBase }) {
-  const pdf = new window.jspdf.jsPDF({ unit: 'pt', format: 'a4', orientation: 'portrait' });
+function renderAtsPdf({ data, fontBase = 9.5 }) {
+  const jsPdfCtor = window.jspdf?.jsPDF;
+  if (!jsPdfCtor) {
+    throw new Error('jsPDF is not available');
+  }
+
+  const pdf = new jsPdfCtor({ unit: 'pt', format: 'a4', orientation: 'portrait' });
+  pdf.setProperties({
+    title: `${data.heroName} - CV`,
+    subject: data.title,
+    author: data.heroName,
+    creator: 'del.dynamic'
+  });
+
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
-  const margin = 36;
-  const lineHeight = Math.round(fontBase * 1.25);
-  const qrSize = qrDataUrl ? 72 : 0;
-  const qrGap = qrDataUrl ? 12 : 0;
-  const topTextWidth = pageWidth - margin * 2 - qrSize - qrGap;
-  const fullTextWidth = pageWidth - margin * 2;
+  const marginX = 40;
+  const marginTop = 38;
+  const marginBottom = 52;
+  const contentWidth = pageWidth - marginX * 2;
+  const bottomLimit = pageHeight - marginBottom;
+  const colors = {
+    accent: [37, 99, 235],
+    text: [15, 23, 42],
+    muted: [71, 85, 105],
+    line: [203, 213, 225]
+  };
 
-  let cursorY = margin;
+  let cursorY = marginTop;
 
-  const textWidth = () => (qrDataUrl && cursorY < margin + qrSize ? topTextWidth : fullTextWidth);
+  const lineHeightFor = (size) => Math.max(10, Math.round(size * 1.24));
 
-  const addLines = (text, { bold = false, size = fontBase, indent = 0 } = {}) => {
-    if (!text) return;
-    pdf.setFont('helvetica', bold ? 'bold' : 'normal');
+  const setStyle = (size, weight, color) => {
+    pdf.setFont('helvetica', weight);
     pdf.setFontSize(size);
-    const width = textWidth() - indent;
-    const lines = pdf.splitTextToSize(text, width);
+    pdf.setTextColor(...color);
+  };
+
+  const wrapText = (text, size, indent = 0) => {
+    if (!text) return [];
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(size);
+    return pdf.splitTextToSize(text, contentWidth - indent);
+  };
+
+  const drawRule = () => {
+    pdf.setDrawColor(...colors.line);
+    pdf.setLineWidth(0.7);
+    pdf.line(marginX, cursorY, pageWidth - marginX, cursorY);
+  };
+
+  const drawContinuationHeader = () => {
+    setStyle(11.5, 'bold', colors.text);
+    pdf.text(data.heroName, marginX, cursorY);
+    cursorY += lineHeightFor(11.5);
+
+    setStyle(8.6, 'normal', colors.muted);
+    pdf.text(data.title, marginX, cursorY);
+    cursorY += lineHeightFor(8.6) + 4;
+
+    drawRule();
+    cursorY += 14;
+  };
+
+  const ensureSpace = (needed) => {
+    if (cursorY + needed <= bottomLimit) return;
+    pdf.addPage();
+    cursorY = marginTop;
+    drawContinuationHeader();
+  };
+
+  const addTextBlock = (text, { size = fontBase, weight = 'normal', color = colors.text, indent = 0, after = 0 } = {}) => {
+    if (!text) return 0;
+    const lines = wrapText(text, size, indent);
+    const height = lines.length * lineHeightFor(size) + after;
+    ensureSpace(height);
+    setStyle(size, weight, color);
     lines.forEach((line) => {
-      pdf.text(line, margin + indent, cursorY);
-      cursorY += lineHeight;
+      pdf.text(line, marginX + indent, cursorY);
+      cursorY += lineHeightFor(size);
     });
+    cursorY += after;
+    return lines.length;
   };
 
   const addSection = (title) => {
-    cursorY += Math.round(lineHeight * 0.2);
-    addLines(title, { bold: true, size: fontBase + 1 });
-    cursorY += Math.round(lineHeight * 0.2);
+    ensureSpace(lineHeightFor(10.8) + 18);
+    setStyle(10.8, 'bold', colors.accent);
+    pdf.text(title, marginX, cursorY);
+    cursorY += lineHeightFor(10.8) - 2;
+    drawRule();
+    cursorY += 10;
   };
 
-  if (qrDataUrl) {
-    pdf.addImage(qrDataUrl, 'PNG', pageWidth - margin - qrSize, margin, qrSize, qrSize);
+  const addEntry = ({ title, meta, body, titleSize = fontBase + 0.55, metaSize = fontBase - 0.1, bodySize = fontBase - 0.1, bodyIndent = 8 }) => {
+    const titleLines = wrapText(title, titleSize);
+    const metaLines = meta ? wrapText(meta, metaSize) : [];
+    const bodyLines = body ? wrapText(body, bodySize, bodyIndent) : [];
+    const needed = (titleLines.length * lineHeightFor(titleSize)) + (metaLines.length * lineHeightFor(metaSize)) + (bodyLines.length * lineHeightFor(bodySize)) + 6;
+
+    ensureSpace(needed);
+
+    setStyle(titleSize, 'bold', colors.text);
+    titleLines.forEach((line) => {
+      pdf.text(line, marginX, cursorY);
+      cursorY += lineHeightFor(titleSize);
+    });
+
+    if (metaLines.length) {
+      setStyle(metaSize, 'normal', colors.muted);
+      metaLines.forEach((line) => {
+        pdf.text(line, marginX, cursorY);
+        cursorY += lineHeightFor(metaSize);
+      });
+    }
+
+    if (bodyLines.length) {
+      setStyle(bodySize, 'normal', colors.muted);
+      bodyLines.forEach((line) => {
+        pdf.text(line, marginX + bodyIndent, cursorY);
+        cursorY += lineHeightFor(bodySize);
+      });
+    }
+
+    cursorY += 6;
+  };
+
+  setStyle(22, 'bold', colors.text);
+  pdf.text(data.heroName, marginX, cursorY);
+  cursorY += lineHeightFor(22) + 1;
+
+  setStyle(11, 'bold', colors.accent);
+  pdf.text(data.title, marginX, cursorY);
+  cursorY += lineHeightFor(11) + 1;
+
+  if (data.contactLine) {
+    addTextBlock(data.contactLine, { size: 8.8, color: colors.muted, after: 1 });
   }
 
-  addLines(data.heroName, { bold: true, size: fontBase + 7 });
-  addLines(data.title, { bold: true, size: fontBase + 2 });
-
-  const contacts = [data.phone, data.email, data.github, data.location].filter(Boolean).join(' | ');
-  addLines(contacts, { size: fontBase });
-  addLines(`Web: ${webUrl}`, { size: fontBase - 1 });
+  cursorY += 4;
+  drawRule();
+  cursorY += 16;
 
   if (data.summary) {
     const summaryTitle = document.documentElement.lang === 'fr' ? 'Profil' : 'Summary';
     addSection(summaryTitle);
-    addLines(data.summary, { size: fontBase });
+    addTextBlock(data.summary, { size: fontBase, color: colors.muted, after: 2 });
   }
 
   if (data.education.length) {
     addSection(data.educationTitle || (document.documentElement.lang === 'fr' ? 'Formation' : 'Education'));
     data.education.forEach((entry) => {
-      const header = [entry.date, entry.degree, entry.school, entry.location].filter(Boolean).join(' — ');
-      addLines(header, { size: fontBase });
+      addEntry({
+        title: entry.school,
+        meta: entry.degree,
+        body: [entry.location, entry.date].filter(Boolean).join(' · '),
+        titleSize: fontBase + 0.4,
+        metaSize: fontBase - 0.05,
+        bodySize: fontBase - 0.05
+      });
     });
   }
 
   if (data.experiences.length) {
     addSection(data.experienceTitle || (document.documentElement.lang === 'fr' ? 'Expérience' : 'Experience'));
     data.experiences.forEach((entry) => {
-      const header = [entry.date, entry.role, entry.company].filter(Boolean).join(' — ');
-      addLines(header, { size: fontBase });
-      addLines(entry.desc, { size: fontBase, indent: 12 });
+      addEntry({
+        title: entry.role,
+        meta: [entry.company, entry.date].filter(Boolean).join(' · '),
+        body: entry.desc,
+        titleSize: fontBase + 0.4,
+        metaSize: fontBase - 0.05,
+        bodySize: fontBase - 0.05
+      });
     });
   }
 
   if (data.projects.length) {
     addSection(data.projectsTitle || (document.documentElement.lang === 'fr' ? 'Projets' : 'Projects'));
     data.projects.forEach((entry) => {
-      const header = [entry.year, entry.name, entry.org].filter(Boolean).join(' — ');
-      addLines(header, { size: fontBase });
-      addLines(entry.desc, { size: fontBase, indent: 12 });
+      addEntry({
+        title: entry.name,
+        meta: [entry.org, entry.year].filter(Boolean).join(' · '),
+        body: entry.desc,
+        titleSize: fontBase + 0.3,
+        metaSize: fontBase - 0.05,
+        bodySize: fontBase - 0.05
+      });
     });
   }
 
   if (data.languages.length) {
     addSection(data.languagesTitle || (document.documentElement.lang === 'fr' ? 'Langues' : 'Languages'));
     data.languages.forEach((entry) => {
-      addLines(`${entry.name}: ${entry.level}`, { size: fontBase });
+      addEntry({
+        title: entry.name,
+        meta: entry.level,
+        titleSize: fontBase + 0.2,
+        metaSize: fontBase - 0.05
+      });
     });
   }
 
@@ -247,37 +377,45 @@ function renderAtsPdf({ data, webUrl, qrDataUrl, fontBase }) {
     data.skillCards.forEach((card) => {
       if (!card.items.length) return;
       addSection(card.title);
-      addLines(card.items.join(', '), { size: fontBase });
+      addTextBlock(card.items.join(' · '), {
+        size: fontBase - 0.05,
+        color: colors.muted,
+        indent: 8,
+        after: 2
+      });
     });
   }
 
-  return {
-    pdf,
-    overflow: cursorY > pageHeight - margin
-  };
+  const totalPages = pdf.getNumberOfPages();
+  for (let page = 1; page <= totalPages; page += 1) {
+    pdf.setPage(page);
+    pdf.setDrawColor(...colors.line);
+    pdf.setLineWidth(0.6);
+    pdf.line(marginX, pageHeight - 24, pageWidth - marginX, pageHeight - 24);
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(8);
+    pdf.setTextColor(...colors.muted);
+    pdf.text(data.heroName, marginX, pageHeight - 12);
+    pdf.text(`${page}/${totalPages}`, pageWidth - marginX, pageHeight - 12, { align: 'right' });
+  }
+
+  return pdf;
 }
 
 async function downloadPDF() {
   const btn = document.querySelector('.btn-download');
-  const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
-  const generatingText = lang === 'en' ? 'Generating…' : 'Génération…';
-  if (!btn) return;
-
-  const hasJsPdf = window.jspdf && typeof window.jspdf.jsPDF === 'function';
-  if (!hasJsPdf) {
-    console.error('jsPDF is not available.');
+  if (!btn) {
     return;
   }
 
-  btn.textContent = generatingText;
-  btn.disabled = true;
+  const lang = document.documentElement.lang === 'en' ? 'en' : 'fr';
+  const generatingText = lang === 'en'
+    ? 'Generating…'
+    : 'Génération…';
+  const originalButtonHtml = btn.innerHTML;
 
   const restoreButton = () => {
-    btn.innerHTML = `
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
-      <span data-i18n="downloadPdf">Télécharger PDF</span>`;
+    btn.innerHTML = originalButtonHtml;
     btn.disabled = false;
 
     if (typeof applyLanguageCv === 'function') {
@@ -285,24 +423,40 @@ async function downloadPDF() {
     }
   };
 
-  const data = collectCvData();
-  const webUrl = window.location.href.split('#')[0];
+  btn.disabled = true;
+  btn.innerHTML = generatingText;
 
-  let qrDataUrl = '';
-  if (window.QRCode && typeof window.QRCode.toDataURL === 'function') {
-    try {
-      qrDataUrl = await window.QRCode.toDataURL(webUrl, { width: 240, margin: 0 });
-    } catch (err) {
-      console.warn('QR generation failed', err);
-    }
+  if (!window.jspdf?.jsPDF) {
+    console.error('jsPDF is not available');
+    restoreButton();
+    return;
   }
 
-  let result = null;
-  for (let size = 11; size >= 7; size -= 1) {
-    result = renderAtsPdf({ data, webUrl, qrDataUrl, fontBase: size });
-    if (!result.overflow) break;
-  }
+  try {
+    const data = collectCvData();
+    const pdf = renderAtsPdf({
+      data,
+      fontBase: lang === 'fr' ? 9.4 : 9.6
+    });
+    const blob = pdf.output('blob');
+    const downloadUrl = URL.createObjectURL(blob);
+    const downloadLink = document.createElement('a');
 
-  result?.pdf.save('CV_Samuel_Chapuis.pdf');
-  restoreButton();
+    downloadLink.href = downloadUrl;
+    downloadLink.download = 'CV_Samuel_Chapuis.pdf';
+    downloadLink.rel = 'noopener';
+    downloadLink.style.display = 'none';
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    downloadLink.remove();
+
+    window.setTimeout(() => {
+      URL.revokeObjectURL(downloadUrl);
+    }, 1000);
+  } catch (err) {
+    console.error('Erreur génération PDF :', err);
+  } finally {
+    restoreButton();
+  }
 }
