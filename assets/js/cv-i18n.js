@@ -12,7 +12,10 @@ const cvTranslations = {
     "interests.4": "Robotique, autonomie des drones et IA embarquée",
     "interests.5": "Apprentissage automatique scientifique pour la dynamique des fluides",
     "interests.6": "Turbulence, écoulements multiphasiques et mécanique des fluides numérique",
-    "experience.title": "Expérience de recherche",
+    "experience.title": "Expérience",
+    "experience.deldynamic.role": "Fondateur & ingénieur services - del.dynamic",
+    "experience.deldynamic.desc": "Création et développement d'une activité indépendante de conseil et de services en ingénierie pour partenaires industriels, centrée sur la simulation, le développement logiciel, la CFD thermique, le prototypage et les systèmes embarqués.",
+    "experience.deldynamic.tags": "Simulation - CFD thermique - logiciel technique - prototypage - systèmes embarqués",
     "experience.cea.role": "Stagiaire recherche - CEA",
     "experience.cea.desc": "Scientific machine learning pour l'instabilité de Rayleigh-Taylor. Développement de modèles de diffusion score-based en PyTorch pour des champs physiques 2D issus de DNS, incluant représentations multi-échelles, workflows HPC et validation physiquement informée par statistiques et spectres.",
     "experience.iris.role": "Stagiaire ingénieur recherche - Iris Lab",
@@ -66,7 +69,10 @@ const cvTranslations = {
     "interests.4": "Robotics, UAV autonomy and embedded AI",
     "interests.5": "Scientific machine learning for fluid dynamics",
     "interests.6": "Turbulence, multiphase flows and computational fluid dynamics",
-    "experience.title": "Research experience",
+    "experience.title": "Experience",
+    "experience.deldynamic.role": "Founder & Service Engineer - del.dynamic",
+    "experience.deldynamic.desc": "Creation and development of an independent engineering consultancy and service activity for industrial partners, focused on simulation, software development, thermal CFD, prototyping and embedded systems.",
+    "experience.deldynamic.tags": "Simulation - thermal CFD - technical software - prototyping - embedded systems",
     "experience.cea.role": "Research Intern - CEA",
     "experience.cea.desc": "Scientific machine learning for Rayleigh-Taylor instability. Development of score-based diffusion models in PyTorch for 2D physical fields from DNS, including multiscale representations, HPC workflows, and physics-aware validation using statistics and spectra.",
     "experience.iris.role": "Research Engineer Intern - Iris Lab",
@@ -132,6 +138,8 @@ function applyLanguageCv(lang) {
     langToggle.innerHTML = `<img src="${flagSrc}" alt="${alt}" class="flag-icon" />`;
     langToggle.setAttribute("aria-label", activeLang === "en" ? "Passer en français" : "Switch to English");
   }
+
+  document.dispatchEvent(new CustomEvent("cv:language-applied", { detail: { lang: activeLang } }));
 }
 
 document.addEventListener("DOMContentLoaded", () => {
